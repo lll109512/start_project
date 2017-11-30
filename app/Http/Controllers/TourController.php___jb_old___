@@ -14,14 +14,15 @@ class TourController extends Controller
     }
     public function edit_index($tour_id)
     {
-        $tour = Tour::find($tour_id);
-        $dates = $tour->hasmany(Tour_date::class)->get();
+        $tour = Tour::with("tourdates")->find($tour_id);
+        $dates = $tour->tourdates;//->get();
         return view('edit')->with('tour',$tour)->with('dates',$dates);
     }
     public function create_index()
     {
         return view('createtour');
     }
+
     public function create()
     {
         $this->validate(request(), [
@@ -48,9 +49,9 @@ class TourController extends Controller
         return redirect()->route("home");
     }
 
-    public function edit(Request $request)
+    public function edit()
     {
-        $this->validate($request, [
+        $this->validate(request(), [
             'Tourname' => 'required|max:255',
             'Itinerary' => 'required'
         ]);

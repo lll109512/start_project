@@ -103,7 +103,7 @@
         </fieldset>
     </div>
     </div>
-    <form method="POST" action="{{ route('setbooking') }}">
+    <form method="POST" action="{{ route('setbooking') }}" id="bookingform">
         {{ csrf_field() }}
       <input type="hidden" name="tour_id" value="{{$tour->id}}">
       <div class="form-group has_error">
@@ -131,9 +131,10 @@
       </div>
       <div class="d-flex justify-content-between">
           <a href="{{ route('home') }}" class="btn btn-secondary" role="button">Back</a>
-          <button type="submit" class="btn btn-primary">Submit</button>
+          <button type="submit" class="btn btn-primary" {{ count($dates)>0 ? '':'disabled' }}>Submit</button>
       </div>
     </form>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.0/js/bootstrap-datepicker.min.js"></script>
     <link rel="stylesheet" href="{{ asset('css\bootstrap-datepicker.min.css') }}">
     <script>

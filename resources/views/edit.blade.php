@@ -4,6 +4,20 @@
     <br />
     <h2>Edit tour</h2>
     <hr />
+    <div id="clone_wrapper" style="display: none;">
+        <table>
+            <tbody>
+            <tr class="date_wrapper">
+                <td>
+                    <input name="Dates[]" class="form-control" value="" data-provide="datepicker">
+                </td>
+                <td>
+                    <a href="javascript:void(0);" class="btn btn-danger remove_date">Remove</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
     <form method="POST" action="{{ route('edit_tour') }}">
         {{ csrf_field() }}
       <input type="hidden" name="tour_id" value="{{$tour->id}}">
@@ -19,20 +33,6 @@
       <div class="form-group d-flex justify-content-between">
          <h3>Tour available Dates</h3>
          <button type="button" class="btn btn-primary" name="button" id="add_date_btn">Add Date</button>
-      </div>
-      <div id="clone_wrapper" style="display: none;">
-          <table>
-              <tbody>
-              <tr class="date_wrapper">
-                  <td>
-                      <input name="Dates[]" class="form-control" value="" data-provide="datepicker">
-                  </td>
-                  <td>
-                      <a href="javascript:void(0);" class="btn btn-danger remove_date">Remove</a>
-                  </td>
-              </tr>
-              </tbody>
-          </table>
       </div>
       <div class="">
           <table class="table table-hover">

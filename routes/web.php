@@ -18,4 +18,6 @@ Route::post('/createtour','TourController@create')->name('create_tour');
 Route::post('/createtour/edit','TourController@edit')->name('edit_tour');
 Route::get('/booking/{tour_id}','TBookingController@booking_index')->name('booking');
 Route::get('/booking','TBookingController@viewbooking_index')->name('view_booking');
+Route::get('/booking/edit/{booking_id}','TBookingController@edit_index')->name('edit_booking_home');
+Route::post('/booking/edit','TBookingController@edit')->name('edit_booking');
 Route::post('/booking/setbooking','TBookingController@setbooking')->name('setbooking');
