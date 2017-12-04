@@ -1,7 +1,7 @@
 @extends('header')
 @section('main_body')
-    <div class="">
-        <br />
+    <div id="app">
+        <br /><h1>@{{ reverse }}</h1>
         <br />
         <br />
         <a class="btn btn-primary" href="{{ route('create_tour') }}" role="button">Create new tour</a>
@@ -34,7 +34,6 @@
           </tbody>
         </table>
     </div>
-    <div class="">
+    <script src="{{asset('resources/assets/js/app.js')}}"></script>
 
-    </div>
 @endsection

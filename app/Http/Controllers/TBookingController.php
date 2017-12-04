@@ -11,20 +11,21 @@ use App\T_booking_passenger;
 
 class TBookingController extends Controller
 {
-    public function booking_index($tour_id)
+    public function bookingIndex($tour_id)
     {
         $tour = Tour::find($tour_id);
         $dates = $tour->tourdates()->where('status',1)->pluck('date');
-        return view('booking',compact("tour","dates"));//->with('tour',$tour)->with('dates', $dates);
+        return view('booking',compact("tour","dates"));
     }
 
-    public function viewbooking_index()
+
+    public function viewBookingIndex()
     {
         $AllBooking = T_booking::All();
         return view('viewbooking')->with('AllBooking',$AllBooking);
     }
 
-    public function setbooking(Request $request)
+    public function setBooking(Request $request)
     {
         // foreach (request('passengers') as passge) {
         //     # code...
@@ -62,21 +63,19 @@ class TBookingController extends Controller
         return redirect()->route('home');
     }
 
-    public function edit_index($booking_id)
+    public function editIndex($booking_id)
     {
         $booking = T_booking::find($booking_id);
         $dates = $booking->tour->tourdates;
         $tour = $booking->tour;
         $status_list = ['Cancelled','Submittied','Confirmed'];
         $passengers = $booking->passenger;
-        return view('editbooking')->with('booking',$booking)->with('dates',$dates)
-        ->with('tour',$tour)->with('status_list',$status_list)
-        ->with('passengers',$passengers);
+        return view('editbooking',compact('booking','dates','tour','status_list','passengers'));
     }
 
-    public function edit()
+    public function edit(Request $request)
     {
-        $this->validate(request(),[
+        $this->validate($request,[
             'exist_passengers.given_name.*' => 'required',
             'exist_passengers.surname.*' => 'required',
             'exist_passengers.email.*' => 'email|required',
@@ -92,34 +91,33 @@ class TBookingController extends Controller
             'new_passengers.birth_date.*' => 'required',
         ]);
 
-        $booking = T_booking::find(request('booking_id'));
+        $booking = T_booking::find($request->input('booking_id'));
 
-        $booking->status = request('booking_status');
-        $booking->tour_date = request('tour_date');
+        $booking->status = $request->input('booking_status');
+        $booking->tour_date = $request->input('tour_date');
         $booking->save();
 
-        // dd(request()->all());
+        // dd($request->input()->all());
 
-        if (request('deleted_id')) {
-            foreach (request('deleted_id') as $passenger_id) {
+        if ($request->input('deleted_id')) {
+            foreach ($request->input('deleted_id') as $passenger_id) {
                 $booking->passenger()->detach(Passenger::find($passenger_id));
                 Passenger::destroy($passenger_id);
             }
         }
-
-        if (request('new_passengers')) {
-            foreach (request('new_passengers')['given_name'] as $key => $value) {
+        if ($request->input('new_passengers')) {
+            foreach ($request->input('new_passengers.given_name') as $key => $value) {
                 $passenger = new Passenger;
                 $passenger->given_name = $value;
-                $passenger->surname = request('new_passengers')['surname'][$key];
-                $passenger->email = request('new_passengers')['email'][$key];
-                $passenger->mobile = request('new_passengers')['mobile'][$key];
-                $passenger->passport = request('new_passengers')['passport'][$key];
-                $passenger->birth_date = request('new_passengers')['birth_date'][$key];
+                $passenger->surname = $request->input("new_passengers.surname.$key");
+                $passenger->email = $request->input("new_passengers.email.$key");
+                $passenger->mobile = $request->input("new_passengers.mobile.$key");
+                $passenger->passport = $request->input("new_passengers.passport.$key");
+                $passenger->birth_date = $request->input("new_passengers.birth_date.$key");
                 $passenger->status = 1;
                 $passenger->save();
-                if (request('new_passengers')['special'][$key]) {
-                    $booking->passenger()->attach($passenger,['special_request'=>request('new_passengers')['special'][$key]]);
+                if ($request->input("new_passengers.special.$key")) {
+                    $booking->passenger()->attach($passenger,['special_request'=>$request->input("new_passengers.special.$key")]);
                 }
                 else {
                     $booking->passenger()->attach($passenger,['special_request'=>'']);
@@ -127,20 +125,20 @@ class TBookingController extends Controller
             }
         }
 
-        if (request('id')){
-            foreach (request('id') as $id) {
+        if ($request->input('id')){
+            foreach ($request->input('id') as $id) {
                 $passenger = Passenger::find($id);
-                $passenger->given_name = request('exist_passengers')['given_name'][$id];
-                $passenger->surname = request('exist_passengers')['surname'][$id];
-                $passenger->email = request('exist_passengers')['email'][$id];
-                $passenger->mobile = request('exist_passengers')['mobile'][$id];
-                $passenger->passport = request('exist_passengers')['passport'][$id];
-                $passenger->birth_date = request('exist_passengers')['birth_date'][$id];
+                $passenger->given_name = $request->input("exist_passengers.given_name.$id");
+                $passenger->surname = $request->input("exist_passengers.surname.$id");
+                $passenger->email = $request->input("exist_passengers.email.$id");
+                $passenger->mobile = $request->input("exist_passengers.mobile.$id");
+                $passenger->passport = $request->input("exist_passengers.passport.$id");
+                $passenger->birth_date = $request->input("exist_passengers.birth_date.$id");
                 $passenger->status = 1;
                 $passenger->save();
                 $booking->passenger()->detach($passenger);
-                if (request('exist_passengers')['special'][$id]) {
-                    $booking->passenger()->attach($passenger,['special_request'=>request('exist_passengers')['special'][$id]]);
+                if ($request->input("exist_passengers.special.$id")) {
+                    $booking->passenger()->attach($passenger,['special_request'=>$request->input("exist_passengers.special.$id")]);
                 }
                 else {
                     $booking->passenger()->attach($passenger,['special_request'=>'']);

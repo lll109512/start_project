@@ -4,7 +4,7 @@
     <br />
     <h2>Edit a Booking</h2>
     <hr />
-    <div id="clone_wrapper" style="display: none;">
+    <script id="form_tpl" type="text/html">
         <div class="form-group">
           <fieldset class="passengers_wrapper">
             <div class="passenger_wrapper">
@@ -16,11 +16,11 @@
                                 Given Name:
                             </label>
                             <div class="col-lg-8">
-                                <input class="form-control form-control-sm" name="new_passengers[given_name][]">
+                                <input class="form-control form-control-sm given_name_validator" name="new_passengers[given_name][<%= element.i %>]">
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="col-lg-6">
                         <div class="form-group">
                             <label class="col-lg-4 control-label">
@@ -28,7 +28,7 @@
                             </label>
 
                             <div class="col-lg-8">
-                                <input class="form-control form-control-sm" name="new_passengers[surname][]">
+                                <input class="form-control form-control-sm surname_validator" name="new_passengers[surname][<%= element.i %>]">
                             </div>
                         </div>
                     </div>
@@ -41,7 +41,7 @@
                             </label>
 
                             <div class="col-lg-8">
-                                <input class="form-control form-control-sm" type="email" name="new_passengers[email][]">
+                                <input class="form-control form-control-sm email_validator" type="email" name="new_passengers[email][<%= element.i %>]">
                             </div>
 
                         </div>
@@ -53,7 +53,7 @@
                             </label>
 
                             <div class="col-lg-8">
-                                <input class="form-control form-control-sm" name="new_passengers[mobile][]">
+                                <input class="form-control form-control-sm  mobile_validator" name="new_passengers[mobile][<%= element.i %>]">
                             </div>
                         </div>
                     </div>
@@ -66,7 +66,7 @@
                             </label>
 
                             <div class="col-lg-8">
-                                <input class="form-control form-control-sm" name="new_passengers[passport][]">
+                                <input class="form-control form-control-sm passport_validator" name="new_passengers[passport][<%= element.i %>]">
                             </div>
 
                         </div>
@@ -78,7 +78,7 @@
                             </label>
 
                             <div class="col-lg-8">
-                                <input class="form-control form-control-sm" name="new_passengers[birth_date][]" data-provide="datepicker">
+                                <input class="form-control form-control-sm passport_validator" name="new_passengers[birth_date][<%= element.i %>]" data-provide="datepicker">
                             </div>
                         </div>
                     </div>
@@ -91,7 +91,7 @@
                             </label>
 
                             <div class="col-lg-6">
-                                <input class="form-control form-control-sm" name="new_passengers[special][]">
+                                <input class="form-control form-control-sm" name="new_passengers[special][<%= element.i %>]">
                             </div>
                         </div>
                     </div>
@@ -103,8 +103,8 @@
             </div>
         </fieldset>
     </div>
-    </div>
-    <form method="POST" action="{{ route('edit_booking') }}">
+    </script>
+    <form method="POST" action="{{ route('edit_booking') }}" id="bookingform">
         {{ csrf_field() }}
       <input type="hidden" name="booking_id" value="{{$booking->id}}">
       <div class="form-group has_error">
@@ -151,7 +151,7 @@
                                           Given Name:
                                       </label>
                                       <div class="col-lg-8">
-                                          <input class="form-control form-control-sm" value="{{$passenger->given_name}}" name="exist_passengers[given_name][{{$passenger->id}}]">
+                                          <input class="form-control form-control-sm given_name_validator" value="{{$passenger->given_name}}" name="exist_passengers[given_name][{{$passenger->id}}]">
                                       </div>
                                   </div>
                               </div>
@@ -162,7 +162,7 @@
                                       </label>
 
                                       <div class="col-lg-8">
-                                          <input class="form-control form-control-sm" value="{{$passenger->surname}}" name="exist_passengers[surname][{{$passenger->id}}]">
+                                          <input class="form-control form-control-sm surname_validator" value="{{$passenger->surname}}" name="exist_passengers[surname][{{$passenger->id}}]">
                                       </div>
                                   </div>
                               </div>
@@ -175,7 +175,7 @@
                                       </label>
 
                                       <div class="col-lg-8">
-                                          <input class="form-control form-control-sm" type="email" value="{{$passenger->email}}"name="exist_passengers[email][{{$passenger->id}}]">
+                                          <input class="form-control form-control-sm email_validator" type="email" value="{{$passenger->email}}"name="exist_passengers[email][{{$passenger->id}}]">
                                       </div>
 
                                   </div>
@@ -187,7 +187,7 @@
                                       </label>
 
                                       <div class="col-lg-8">
-                                          <input class="form-control form-control-sm" value="{{$passenger->mobile}}" name="exist_passengers[mobile][{{$passenger->id}}]">
+                                          <input class="form-control form-control-sm mobile_validator" value="{{$passenger->mobile}}" name="exist_passengers[mobile][{{$passenger->id}}]">
                                       </div>
                                   </div>
                               </div>
@@ -200,7 +200,7 @@
                                       </label>
 
                                       <div class="col-lg-8">
-                                          <input class="form-control form-control-sm" value="{{$passenger->passport}}" name="exist_passengers[passport][{{$passenger->id}}]">
+                                          <input class="form-control form-control-sm passport_validator" value="{{$passenger->passport}}" name="exist_passengers[passport][{{$passenger->id}}]">
                                       </div>
 
                                   </div>
@@ -212,7 +212,7 @@
                                       </label>
 
                                       <div class="col-lg-8">
-                                          <input class="form-control form-control-sm" name="exist_passengers[birth_date][{{$passenger->id}}]" value="{{$passenger->birth_date}}" data-provide="datepicker">
+                                          <input class="form-control form-control-sm birth_date_validator" name="exist_passengers[birth_date][{{$passenger->id}}]" value="{{$passenger->birth_date}}" data-provide="datepicker">
                                       </div>
                                   </div>
                               </div>
@@ -251,9 +251,72 @@
         $.fn.datepicker.defaults.format = "yyyy-mm-dd";
         $.fn.datepicker.defaults.autoclose = true;
         $(function () {
+            _.templateSettings.variable = "element";
+            var tpl = _.template($("#form_tpl").html());
+            var counter = 0;
+
             $("#add_pass_btn").click(function (e) {
-                var colDom = $("#clone_wrapper").find(".passenger_wrapper").clone();
-                $("#passengers_wrapper").append(colDom);
+                e.preventDefault();
+                var tplData = {
+                    i: counter
+                };
+                $("#passengers_wrapper").append(tpl(tplData));
+                counter += 1;
+                $('.given_name_validator').each(function () {
+                    $(this).rules("add", {
+                        required: true,
+                        messages:{
+                            required:'<font size="3" color="red">* please enter your given name</font>'
+                        }
+                    });
+                });
+                $('.surname_validator').each(function () {
+                    $(this).rules("add", {
+                        required: true,
+                        messages:{
+                            required:'<font size="3" color="red">* please enter your surname</font>'
+                        }
+                    });
+                });
+                $('.email_validator').each(function () {
+                    $(this).rules("add", {
+                        required: true,
+                        email:true,
+                        messages:{
+                            required:'<font size="3" color="red">* please enter a your email</font>',
+                            email:'<font size="3" color="red">* please enter a valid email</font>'
+                        }
+                    });
+                });
+                $('.mobile_validator').each(function () {
+                    $(this).rules("add", {
+                        required: true,
+                        number:true,
+                        messages:{
+                            required:'<font size="3" color="red">* please enter your mobile</font>',
+                            number:'<font size="3" color="red">* please enter a valid number</font>'
+
+                        }
+                    });
+                });
+                $('.passport_validator').each(function () {
+                    $(this).rules("add", {
+                        required: true,
+                        messages:{
+                            required:'<font size="3" color="red">* please enter your name</font>'
+                        }
+                    });
+                });
+                $('.birth_date_validator').each(function () {
+                    $(this).rules("add", {
+                        required: true,
+                        messages:{
+                            required:'<font size="3" color="red">* please enter your name</font>'
+                        }
+                    });
+                });
+
+
             });
 
             $("body").on("click", ".remove_passenger", function (e) {
@@ -264,6 +327,7 @@
                 }
                 parentDom.remove();
             });
+            $("#bookingform").validate();
         });
     </script>
 @endsection

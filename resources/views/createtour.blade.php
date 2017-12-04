@@ -4,11 +4,21 @@
     <br />
     <h2>Create tour</h2>
     <hr />
-    <form method="POST" action="{{ route('create_tour') }}">
+    <script type="text/html" id="form_tpl">
+        <tr class="date_wrapper">
+            <td>
+                <input name="Dates[<%= element.i %>]" class="form-control date_validator" value="" data-provide="datepicker">
+            </td>
+            <td>
+                <a href="javascript:void(0);" class="btn btn-danger remove_date">Remove</a>
+            </td>
+        </tr>
+    </script>
+    <form method="POST" id="tour_form" action="{{ route('create_tour') }}">
         {{ csrf_field() }}
-      <div class="form-group has_error">
+      <div class="form-group">
         <label for="Tour">Tour name:</label>
-        <input name="Tourname" class="form-control" id="Tour" required>
+        <input name="Tourname" class="form-control" required>
       </div>
       <div class="form-group">
         <label for="Itinerary">Itinerary:</label>
@@ -18,20 +28,6 @@
       <div class="form-group d-flex justify-content-between">
          <h3>Tour available Dates</h3>
          <button type="button" class="btn btn-primary" name="button" id="add_date_btn">Add Date</button>
-      </div>
-      <div id="clone_wrapper" style="display: none;">
-          <table>
-              <tbody>
-              <tr class="date_wrapper">
-                  <td>
-                      <input name="Dates[]" class="form-control" value="" data-provide="datepicker">
-                  </td>
-                  <td>
-                      <a href="javascript:void(0);" class="btn btn-danger remove_date">Remove</a>
-                  </td>
-              </tr>
-              </tbody>
-          </table>
       </div>
       <div class="">
           <table class="table table-hover">
@@ -57,13 +53,44 @@
         $.fn.datepicker.defaults.autoclose = true;
 
         $(function () {
+            _.templateSettings.variable = "element";
+            var tpl = _.template($("#form_tpl").html());
+            var counter = 0;
+
             $("#add_date_btn").click(function (e) {
-                var colDom = $("#clone_wrapper").find("tr.date_wrapper").clone();
-                $("#dates").append(colDom);
+                e.preventDefault();
+                var tplData = {
+                    i: counter
+                };
+                $("#dates").append(tpl(tplData));
+                counter += 1;
+                $('.date_validator').each(function () {
+                    $(this).rules("add", {
+                        required: true,
+                        messages:{
+                            required:'<font size="3" color="red">* please select a date</font>'
+                        }
+                    });
+                });
             });
+
 
             $("body").on("click",".remove_date",function (e) {
                 $(this).closest(".date_wrapper").remove();
+            });
+            $("#tour_form").validate({
+                rules:{
+                    Tourname:'required',
+                    Itinerary:'required'
+                },
+                messages:{
+                    Tourname:{
+                        required:'<font size="3" color="red">* please enter a name of tour</font>'
+                    },
+                    Itinerary:{
+                        required:'<font size="3" color="red">* please enter a description of tour</font>'
+                    }
+                }
             });
         });
     </script>
