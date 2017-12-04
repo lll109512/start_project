@@ -14,10 +14,20 @@ window.Vue = require('vue');
  * the page. Then, you may begin adding components to this application
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
- 
+
+import BookingComponent from './components/BookingComponent';
+
 
 Vue.component('example-component', require('./components/ExampleComponent.vue'));
+// Vue.component('booking-component', BookingComponent);
+//
+// const app = new Vue({
+//     el: '#app'
+// });
 
-const app = new Vue({
-    el: '#app'
-});
+new Vue({
+    el:'#bookingform',
+    components:{
+        'booking-component':BookingComponent
+    }
+})
